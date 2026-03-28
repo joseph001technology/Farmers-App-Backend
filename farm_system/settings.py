@@ -45,7 +45,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '192.168.100.144',     # ← Your PC's IP
-    '10.0.2.2',            # ← For Android Emulator
+    '10.0.2.2', 
+    'kiarie-farm.onrender.com',  # ← For Android Emulator
     '.onrender.com'   #← (for Render deployment)
     '*',                   # ← Allows all hosts (ONLY for development!)
 ]
