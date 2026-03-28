@@ -81,7 +81,7 @@ class CheckoutSerializer(serializers.Serializer):
             raise serializers.ValidationError("Your cart is empty.")
 
         # Use the correct related_name (most common is cartitem_set)
-        cart_items = cart.cartitem_set.all()   # ← Change this if your related_name is different
+        cart_items = cart.items.all()   
 
         if not cart_items.exists():
             raise serializers.ValidationError("Your cart is empty.")
@@ -106,8 +106,8 @@ class CheckoutSerializer(serializers.Serializer):
 
             order.total_price = total_price
             order.save()
-
-            # Optional: Clear cart after successful checkout
-            # cart.cartitem_set.all().delete()
+            
+            # ✅ CLEAR CART AFTER CHECKOUT
+            cart_items.delete()
 
         return order

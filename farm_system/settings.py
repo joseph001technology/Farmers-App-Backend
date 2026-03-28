@@ -21,7 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p_^qr97388$_l@^(@(ouvwno2_26e4ip+y0y!h$b&=124lm)%o'
+
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-p_^qr97388$_l@^(@(ouvwno2_26e4ip+y0y!h$b&=124lm)%o"  # fallback for local
+)
 
 
 # CORS settings
@@ -36,7 +41,14 @@ CORS_ALLOW_CREDENTIALS = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '192.168.100.144',     # ← Your PC's IP
+    '10.0.2.2',            # ← For Android Emulator
+    '.onrender.com'   #← (for Render deployment)
+    '*',                   # ← Allows all hosts (ONLY for development!)
+]
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
@@ -65,6 +77,7 @@ INSTALLED_APPS = [
     'api',
     
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

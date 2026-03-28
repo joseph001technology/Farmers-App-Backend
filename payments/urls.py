@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import PaymentCreateView
- 
+from .views import MpesaSTKPushView, mpesa_callback
+
 urlpatterns = [
-    path('', PaymentCreateView.as_view(), name='payment-create'),
+    path('stk-push/', MpesaSTKPushView.as_view()),
+    path('callback/', mpesa_callback),
 ]
