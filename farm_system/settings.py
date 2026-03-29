@@ -40,7 +40,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -120,9 +120,9 @@ WSGI_APPLICATION = 'farm_system.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL") or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        default=os.environ["DATABASE_URL"],  # will crash if missing
         conn_max_age=600,
-        ssl_require=not DEBUG
+        ssl_require=True
     )
 }
 
