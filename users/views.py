@@ -16,13 +16,14 @@ class LoginView(TokenObtainPairView):
     serializer_class = CustomTokenSerializer
     
 from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_superuser(request):
     """Temporary endpoint to create superuser on Render Free plan"""
     username = request.data.get('username')
