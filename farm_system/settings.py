@@ -43,6 +43,7 @@ CORS_ALLOW_CREDENTIALS = True
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
+    'josephkiarie2.pythonanywhere.com',
     '127.0.0.1',
     'localhost',
     '192.168.100.144',     # ← Your PC's IP

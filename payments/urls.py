@@ -2,6 +2,6 @@ from django.urls import path
 from .views import MpesaSTKPushView, mpesa_callback
 
 urlpatterns = [
-    path('stk-push/', MpesaSTKPushView.as_view()),
-    path('callback/', mpesa_callback),
+    path('mpesa/stk-push/', MpesaSTKPushView.as_view(), name='mpesa-stk-push'),
+    path('mpesa/callback/', mpesa_callback, name='mpesa-callback'),
 ]
