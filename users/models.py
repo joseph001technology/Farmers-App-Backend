@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
@@ -34,6 +35,11 @@ class Profile(models.Model):
     farm_size = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # in acres
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def clean(self):
+        # Only require farm_size if user is a farmer
+        if self.user.role == 'farmer' and not self.farm_size:
+            raise ValidationError({'farm_size': 'Farm size is required for farmers.'})
 
     def __str__(self):
         return f"Profile of {self.user.username}"
