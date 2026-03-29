@@ -61,6 +61,7 @@ AUTHENTICATION_BACKENDS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,7 +157,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -183,4 +185,91 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
+}
+
+# ==================== JAZZMIN SETTINGS ====================
+JAZZMIN_SETTINGS = {
+    # Title and Branding
+    "site_title": "FreshFarm Admin",
+    "site_header": "FreshFarm",
+    "site_brand": "FreshFarm",
+    "welcome_sign": "Welcome to FreshFarm Administration",
+
+    # Logo (Important)
+    "site_logo": "assets/admin-logo.png",           # ← Change this to your logo path
+    "site_logo_classes": "img-circle",
+    "login_logo": "assets/admin-logo.png",
+    "login_logo_dark": "assets/admin-logo.png",
+    
+    
+
+    # Theme & Colors
+    "theme": "solar",                        # Options: darkly, flatly, cyborg, solar, slate, etc.
+    "dark_mode_theme": "darkly",
+
+    # Top Navigation
+    "topmenu_links": [
+        {"name": "View Site", "url": "http://kiarie-farm.onrender.com", "new_window": True},
+        {"name": "FreshFarm", "url": "/", "new_window": False},
+    ],
+
+    # Sidebar Settings
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+
+    # Icons
+    "icons": {
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "users.User": "fas fa-user-circle",
+        "products.Product": "fas fa-box",
+        "orders.Order": "fas fa-shopping-cart",
+        "cart.Cart": "fas fa-cart-plus",
+    },
+
+    # UI Customizations
+    "custom_css": None,
+    "custom_js": None,
+    "show_ui_builder": False,                  # Allows you to customize live
+    "changeform_format": "horizontal_tabs",
+
+    # Copyright
+    "copyright": "FreshFarm © 2026",
+    
+    # Footer
+    "footer_fixed": False,
+}
+
+# Optional: Make it even nicer with custom colors
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-success",
+    "accent": "accent-success",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
 }

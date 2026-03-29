@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from rest_framework.permissions import AllowAny
 from users.models import User
 from .serializers import CustomTokenSerializer, UserSerializer
 
@@ -9,6 +9,7 @@ from .serializers import CustomTokenSerializer, UserSerializer
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
 
 # ✅ LOGIN VIEW (This is the only login view we need)
@@ -18,7 +19,7 @@ class LoginView(TokenObtainPairView):
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+ 
 
 User = get_user_model()
 
