@@ -20,4 +20,5 @@ def api_root(request, format=None):
         # Payments
         'mpesa_stk_push': reverse('mpesa-stk-push', request=request, format=format),
         'mpesa_callback': reverse('mpesa-callback', request=request, format=format),
+        'profile': reverse('profile', request=request, format=format),
     })
