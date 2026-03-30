@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .mpesa import stk_push
 from orders.models import Order
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 
 class MpesaSTKPushView(APIView):
@@ -31,6 +31,7 @@ class MpesaSTKPushView(APIView):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def mpesa_callback(request):
     data = request.data
 
