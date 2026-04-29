@@ -1,33 +1,55 @@
-from django.http import JsonResponse
-from rest_framework import generics, permissions
+ 
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .serializers import ProductSerializer
 
-# def product_list(request):
-#     products = Product.objects.all()
-    
-#     data = []
-#     for product in products:
-#         data.append({
-#             'id': product.id,
-#             'name': product.name,
-#             'price': str(product.price),
-#             'image': request.build_absolute_uri(product.image.url) if product.image else ""
-#         })
-    
-#     return JsonResponse(data, safe=False)
 
-# 🔹 GET all products + POST new product
 class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all().order_by('-created_at')
+    """
+    GET  /api/products/          — list all products
+    GET  /api/products/?search=tomato  — search by name
+    GET  /api/products/?category=vegetables — filter by category
+    POST /api/products/          — farmer creates product
+    """
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Product.objects.all().order_by('-created_at')
+
+        # Search by name
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+
+        # Filter by category
+        category = self.request.query_params.get('category')
+        if category and category != 'all':
+            queryset = queryset.filter(category=category)
+
+        return queryset
 
     def perform_create(self, serializer):
-        # Automatically assign logged-in user as farmer
         serializer.save(farmer=self.request.user)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
-# 🔹 GET single product
-class ProductDetailView(generics.RetrieveAPIView):
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    GET    /api/products/{id}/  — product detail
+    PUT    /api/products/{id}/  — farmer updates product
+    DELETE /api/products/{id}/  — farmer deletes product
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context

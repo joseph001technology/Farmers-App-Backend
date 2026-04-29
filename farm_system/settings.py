@@ -81,6 +81,8 @@ INSTALLED_APPS = [
     'orders',
     'payments',
     'api',
+    'ratings',
+    'dashboard',
     
 ]
 CORS_ALLOW_ALL_ORIGINS = True

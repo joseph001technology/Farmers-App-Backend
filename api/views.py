@@ -21,4 +21,29 @@ def api_root(request, format=None):
         'mpesa_stk_push': reverse('mpesa-stk-push', request=request, format=format),
         'mpesa_callback': reverse('mpesa-callback', request=request, format=format),
         'profile': reverse('profile', request=request, format=format),
+        
+        # Ratings  
+        'create_rating': reverse(
+            'rating-create',
+            request=request,
+            format=format
+        ),
+        'my_ratings': reverse(
+            'my-ratings',
+            request=request,
+            format=format
+        ),
+
+        # Dashboard
+        'farmer_dashboard': reverse(
+            'farmer-dashboard',
+            request=request,
+            format=format
+        ),
+        'admin_dashboard': reverse(
+            'admin-dashboard',
+            request=request,
+            format=format
+        ),
+    
     })
