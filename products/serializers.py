@@ -1,18 +1,18 @@
- 
 from rest_framework import serializers
 from .models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
     farmer = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
+    image = serializers.ImageField(required=False, allow_null=True, use_url=False)  # writable for upload
+    image_url = serializers.SerializerMethodField()                                 # read-only absolute URL
     average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = [
             'id', 'farmer', 'name', 'category', 'price',
-            'quantity', 'description', 'image',
+            'quantity', 'description', 'image', 'image_url',
             'harvest_date', 'average_rating', 'created_at'
         ]
         read_only_fields = ['created_at']
@@ -20,7 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_farmer(self, obj):
         return f"{obj.farmer.username} ({obj.farmer.phone_number})"
 
-    def get_image(self, obj):
+    def get_image_url(self, obj):
         request = self.context.get('request')
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)

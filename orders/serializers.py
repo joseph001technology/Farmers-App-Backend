@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.db import transaction
 from products.models import Product
 from .models import Cart, CartItem, Order, OrderItem
+from ratings.serializers import RatingSerializer
 
 
 class OrderItemDetailSerializer(serializers.ModelSerializer):

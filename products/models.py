@@ -7,12 +7,18 @@ User = settings.AUTH_USER_MODEL
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
-        ('vegetables', 'Vegetables'),
-        ('fruits', 'Fruits'),
-        ('grains', 'Grains'),
-        ('animal_products', 'Animal Products'),
-        ('manure', 'Manure'),
-        ('others', 'Others'),
+        ('fresh_produce', 'Fresh Produce'),
+        ('grains_seeds', 'Grains & Seeds'),
+        ('livestock', 'Livestock & Poultry'),
+        ('animal_derivatives', 'Animal Derivatives'),
+        ('processed_goods', 'Value-Added Goods'),
+        ('nursery_floral', 'Nursery & Floral'),
+        ('inputs_chemicals', 'Inputs & Amendments'),
+        ('animal_feed', 'Feed & Nutrition'),
+        ('machinery', 'Heavy Machinery'),
+        ('tools_hardware', 'Tools & Hardware'),
+        ('timber_bio', 'Timber & Bio-Resources'),
+        ('services', 'Farm Services'),
     ]
 
     farmer = models.ForeignKey(
