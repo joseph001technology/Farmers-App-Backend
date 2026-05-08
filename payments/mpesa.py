@@ -12,12 +12,6 @@ SHORTCODE = os.environ.get("MPESA_SHORTCODE", "174379")
 PASSKEY = os.environ.get("MPESA_PASSKEY", "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919")
 CALLBACK_URL = "https://josephkiarie2.pythonanywhere.com/api/payments/mpesa/callback/"
 
-# ✅ Allowed numbers for sandbox testing
-ALLOWED_TEST_NUMBERS = [
-    "254708374149",   # Safaricom test number
-    "254742906228",   # Your number — be careful!
-]
-
 SANDBOX_MODE = True  # ← set to False when going live
 
 
@@ -46,10 +40,6 @@ def stk_push(phone, amount, account_reference="Order", transaction_desc="Payment
         phone = "254" + phone[1:]
     elif phone.startswith("+"):
         phone = phone[1:]
-
-    # 🔒 SAFETY: block non-whitelisted numbers in sandbox
-    if SANDBOX_MODE and phone not in ALLOWED_TEST_NUMBERS:
-        raise Exception(f"❌ Number {phone} not in sandbox whitelist. Add it to ALLOWED_TEST_NUMBERS.")
 
     payload = {
         "BusinessShortCode": SHORTCODE,
