@@ -1,4 +1,3 @@
- 
 from rest_framework import serializers
 from django.db import transaction
 from products.models import Product
@@ -93,7 +92,6 @@ class CheckoutSerializer(serializers.Serializer):
         if not items_data:
             raise serializers.ValidationError("No items provided.")
 
-        # Determine initial status based on payment method
         initial_status = (
             'pending_delivery' if payment_method == 'pod' else 'pending'
         )
@@ -122,10 +120,93 @@ class CheckoutSerializer(serializers.Serializer):
         return order
 
 
+# ── NEW: Receipt serializer ────────────────────────────────────────
+class ReceiptItemSerializer(serializers.ModelSerializer):
+    """Line-item on the receipt."""
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    product_image = serializers.SerializerMethodField()
+    line_total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            'id', 'product', 'product_name', 'product_image',
+            'quantity', 'price', 'line_total',
+        ]
+
+    def get_product_image(self, obj):
+        request = self.context.get('request')
+        if obj.product.image and request:
+            return request.build_absolute_uri(obj.product.image.url)
+        return None
+
+    def get_line_total(self, obj):
+        return float(obj.price) * obj.quantity
+
+
+class ReceiptSerializer(serializers.ModelSerializer):
+    """Full invoice-style receipt payload."""
+    order_items   = ReceiptItemSerializer(many=True, read_only=True, source='items')
+    buyer_name    = serializers.SerializerMethodField()
+    buyer_phone   = serializers.SerializerMethodField()
+    payment_label = serializers.SerializerMethodField()
+    status_label  = serializers.SerializerMethodField()
+    seller_name   = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = [
+            'id',
+            'status',
+            'status_label',
+            'total_price',
+            'payment_method',
+            'payment_label',
+            'delivery_address',
+            'created_at',
+            'buyer_name',
+            'buyer_phone',
+            'seller_name',
+            'order_items',
+        ]
+
+    def get_buyer_name(self, obj):
+        user = obj.user
+        full = f"{user.first_name} {user.last_name}".strip()
+        return full or user.username
+
+    def get_buyer_phone(self, obj):
+        # Adjust field name if your User model stores phone differently
+        return getattr(obj.user, 'phone_number', None) or \
+               getattr(obj.user, 'phone', None) or ''
+
+    def get_payment_label(self, obj):
+        labels = {
+            'mpesa': 'M-Pesa STK Push',
+            'pod':   'Pay on Delivery',
+        }
+        return labels.get(obj.payment_method, obj.payment_method)
+
+    def get_status_label(self, obj):
+        labels = {
+            'pending':          'Pending Payment',
+            'pending_delivery': 'Pending Delivery',
+            'paid':             'Paid',
+            'out_for_delivery': 'Out for Delivery',
+            'delivered':        'Delivered',
+            'cancelled':        'Cancelled',
+        }
+        return labels.get(obj.status, obj.status.title())
+
+    def get_seller_name(self, obj):
+        return "FarmFresh Kenya"
+
+
+# ── (unchanged) ────────────────────────────────────────────────────
 class FarmerSummarySerializer(serializers.Serializer):
-    total_orders = serializers.IntegerField()
-    total_revenue = serializers.DecimalField(max_digits=12, decimal_places=2)
-    paid_orders = serializers.IntegerField()
-    pending_orders = serializers.IntegerField()
+    total_orders    = serializers.IntegerField()
+    total_revenue   = serializers.DecimalField(max_digits=12, decimal_places=2)
+    paid_orders     = serializers.IntegerField()
+    pending_orders  = serializers.IntegerField()
     delivered_orders = serializers.IntegerField()
-    top_product = serializers.CharField()
+    top_product     = serializers.CharField()
