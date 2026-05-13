@@ -1,3 +1,5 @@
+## api/views.py
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -9,41 +11,28 @@ def api_root(request, format=None):
         'products': reverse('product-list-create', request=request, format=format),
 
         # Orders
-        'orders': reverse('order-list-create', request=request, format=format),
-        'checkout': reverse('checkout', request=request, format=format),
+        'orders':   reverse('order-list-create', request=request, format=format),
+        'checkout': reverse('checkout',          request=request, format=format),
 
         # Users / Auth
-        'register': reverse('register', request=request, format=format),
-        'login': reverse('login', request=request, format=format),
+        'register':      reverse('register',      request=request, format=format),
+        'login':         reverse('login',         request=request, format=format),
         'token_refresh': reverse('token_refresh', request=request, format=format),
+        'profile':       reverse('profile',       request=request, format=format),
+
+        # Farmers (public — no auth required)
+        'farmers':        reverse('farmer-list',   request=request, format=format),
+        # farmer-detail is dynamic (/api/users/farmer/<id>/) so not listed here
 
         # Payments
-        'mpesa_stk_push': reverse('mpesa-stk-push', request=request, format=format),
-        'mpesa_callback': reverse('mpesa-callback', request=request, format=format),
-        'profile': reverse('profile', request=request, format=format),
-        
-        # Ratings  
-        'create_rating': reverse(
-            'rating-create',
-            request=request,
-            format=format
-        ),
-        'my_ratings': reverse(
-            'my-ratings',
-            request=request,
-            format=format
-        ),
+        'mpesa_stk_push': reverse('mpesa-stk-push',  request=request, format=format),
+        'mpesa_callback': reverse('mpesa-callback',  request=request, format=format),
+
+        # Ratings
+        'create_rating': reverse('rating-create', request=request, format=format),
+        'my_ratings':    reverse('my-ratings',    request=request, format=format),
 
         # Dashboard
-        'farmer_dashboard': reverse(
-            'farmer-dashboard',
-            request=request,
-            format=format
-        ),
-        'admin_dashboard': reverse(
-            'admin-dashboard',
-            request=request,
-            format=format
-        ),
-    
+        'farmer_dashboard': reverse('farmer-dashboard', request=request, format=format),
+        'admin_dashboard':  reverse('admin-dashboard',  request=request, format=format),
     })
