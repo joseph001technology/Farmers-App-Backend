@@ -12,7 +12,8 @@ def api_root(request, format=None):
 
         # Orders
         'orders':   reverse('order-list-create', request=request, format=format),
-        'checkout': reverse('order-checkout',          request=request, format=format),
+        # api/views.py
+        'checkout': reverse('order-checkout', request=request, format=format),
 
         # Users / Auth
         'register':      reverse('register',      request=request, format=format),
