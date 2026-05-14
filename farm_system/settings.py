@@ -51,7 +51,7 @@ ALLOWED_HOSTS = [
     '192.168.100.144',     # ← Your PC's IP
     '10.0.2.2', 
     'kiarie-farm.onrender.com',  # ← For Android Emulator
-    '.onrender.com'   #← (for Render deployment)
+    '.onrender.com',   #← (for Render deployment)
     '*',                   # ← Allows all hosts (ONLY for development!)
 ]
 AUTH_USER_MODEL = 'users.User'
@@ -170,7 +170,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 #  enable Gzip and caching for performance
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
