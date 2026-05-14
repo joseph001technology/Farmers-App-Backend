@@ -51,19 +51,31 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
-        order = Order.objects.create(total_price=0, **validated_data)
-        total_price = 0
-        for item_data in items_data:
-            product = item_data['product']
-            quantity = item_data['quantity']
-            price = product.price
-            OrderItem.objects.create(
-                order=order, product=product,
-                quantity=quantity, price=price
-            )
-            total_price += price * quantity
-        order.total_price = total_price
-        order.save()
+        with transaction.atomic():
+            order = Order.objects.create(total_price=0, **validated_data)
+            total_price = 0
+            for item_data in items_data:
+                product = Product.objects.select_for_update().get(
+                    id=item_data['product'].id
+                )
+                quantity = item_data['quantity']
+
+                if product.quantity < quantity:
+                    raise serializers.ValidationError(
+                        f"Only {product.quantity} units of '{product.name}' available."
+                    )
+
+                OrderItem.objects.create(
+                    order=order, product=product,
+                    quantity=quantity, price=product.price
+                )
+                total_price += product.price * quantity
+
+                product.quantity -= quantity
+                product.save()
+
+            order.total_price = total_price
+            order.save()
         return order
 
 
@@ -106,19 +118,29 @@ class CheckoutSerializer(serializers.Serializer):
             )
             total_price = 0
             for item in items_data:
-                product = Product.objects.get(id=item['product'])
+                product = Product.objects.select_for_update().get(
+                    id=item['product']
+                )
                 quantity = int(item['quantity'])
+
+                if product.quantity < quantity:
+                    raise serializers.ValidationError(
+                        f"Only {product.quantity} units of '{product.name}' available."
+                    )
+
                 OrderItem.objects.create(
                     order=order, product=product,
                     quantity=quantity, price=product.price
                 )
                 total_price += product.price * quantity
 
+                product.quantity -= quantity
+                product.save()
+
             order.total_price = total_price
             order.save()
 
         return order
-
 
 # ── NEW: Receipt serializer ────────────────────────────────────────
 class ReceiptItemSerializer(serializers.ModelSerializer):
